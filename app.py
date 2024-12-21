@@ -1,18 +1,18 @@
 import os
 from typing import List
 
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain_community.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import Chroma
+from langchain_community.vectorstores import Chroma
 from langchain.chains import (
     ConversationalRetrievalChain,
 )
-from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 
-from langchain.docstore.document import Document
-from langchain.memory import ChatMessageHistory, ConversationBufferMemory
+from langchain_community.docstore.document import Document
+from langchain_community.chat_message_histories import ChatMessageHistory
+from langchain.memory import ConversationBufferMemory
 
-import chainlit as cl
 
 print("all_ok")
 
@@ -24,9 +24,9 @@ OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
 
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 
-
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
 
+import chainlit as cl
 
 @cl.on_chat_start
 async def on_chat_start():
@@ -43,7 +43,7 @@ async def on_chat_start():
 
     file = files[0]
     
-    msg = cl.Message(content=f"Processing `{file.name}`...", disable_feedback=True)
+    msg = cl.Message(content=f"Processing `{file.name}`...")
     await msg.send()
     
     with open(file.path, "r", encoding="utf-8") as f:
@@ -115,5 +115,3 @@ async def main(message: cl.Message):
             answer += "\nNo sources found"
 
     await cl.Message(content=answer, elements=text_elements).send()
-    
-    
